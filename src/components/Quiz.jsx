@@ -1,10 +1,13 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState, useCallback } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function Quiz() {
   const location = useLocation();
+  const navigate = useNavigate();
+
   const queryParams = new URLSearchParams(location.search);
-  const category = queryParams.get("category") || "9"; // Category ID
+  const category = queryParams.get("category") || "9"; // Default category
   const difficulty = queryParams.get("difficulty") || "easy";
 
   const [questions, setQuestions] = useState([]);
@@ -12,48 +15,69 @@ export default function Quiz() {
   const [score, setScore] = useState(0);
   const [loading, setLoading] = useState(true);
   const [quizCompleted, setQuizCompleted] = useState(false);
-  const [error, setError] = useState(false);
+  // ✅ Fallback sample questions
+  const sampleQuestions = [
+    {
+      question: "What is the capital of France?",
+      answers: ["Berlin", "Madrid", "Paris", "Rome"],
+      correctAnswer: "Paris",
+    },
+    {
+      question: "Which planet is known as the Red Planet?",
+      answers: ["Earth", "Mars", "Venus", "Jupiter"],
+      correctAnswer: "Mars",
+    },
+  ];
 
+  // Fetch questions
   const fetchQuestions = useCallback(() => {
     setLoading(true);
-    setError(false);
+    const url = `https://opentdb.com/api.php?amount=10&category=${category}&difficulty=${difficulty}&type=multiple`;
+    console.log("Fetching:", url);
 
-    fetch(
-      `https://opentdb.com/api.php?amount=10&category=${category}&difficulty=${difficulty}&type=multiple`
-    )
-      .then((res) => res.json())
+    fetch(url)
+      .then((res) => {
+        if (res.status === 429) {
+          throw new Error(
+            "Rate limit reached. Please wait a bit and try again."
+          );
+        }
+        return res.json();
+      })
       .then((data) => {
-        console.log("Data received:", data);
+        console.log("API response:", data);
+
         if (
-          !data.results ||
+          data.response_code !== 0 ||
           !Array.isArray(data.results) ||
           data.results.length === 0
         ) {
-          console.error("Unexpected data format or empty results:", data);
-
-          setError(true);
+          console.warn("No questions found, using sample fallback.");
+          setQuestions(sampleQuestions); // ✅ fallback to sample
           setLoading(false);
           return;
         }
 
-        const formattedQuestions = data.results.map((question) => {
-          const answers = [...question.incorrect_answers];
+        // Format API questions
+        const formatted = data.results.map((q) => {
+          const answers = [...q.incorrect_answers];
           const randomIndex = Math.floor(Math.random() * (answers.length + 1));
-          answers.splice(randomIndex, 0, question.correct_answer);
+          answers.splice(randomIndex, 0, q.correct_answer);
 
           return {
-            question: question.question,
+            question: q.question,
             answers: answers,
-            correctAnswer: question.correct_answer,
+            correctAnswer: q.correct_answer,
           };
         });
 
-        setQuestions(formattedQuestions);
+        setQuestions(formatted);
         setLoading(false);
       })
       .catch((err) => {
-        console.error("Error fetching questions:", err);
-        setError(true);
+        console.error("Error fetching questions:", err.message);
+        console.warn("Using fallback sample questions instead.");
+        setQuestions(sampleQuestions); // ✅ fallback
         setLoading(false);
       });
   }, [category, difficulty]);
@@ -67,9 +91,9 @@ export default function Quiz() {
       setScore((prev) => prev + 1);
     }
 
-    const nextQuestionIndex = currentQuestionIndex + 1;
-    if (nextQuestionIndex < questions.length) {
-      setCurrentQuestionIndex(nextQuestionIndex);
+    const nextIndex = currentQuestionIndex + 1;
+    if (nextIndex < questions.length) {
+      setCurrentQuestionIndex(nextIndex);
     } else {
       setQuizCompleted(true);
     }
@@ -82,9 +106,8 @@ export default function Quiz() {
     fetchQuestions();
   };
 
+  // UI states
   if (loading) return <div>Loading questions...</div>;
-  if (error) return <div>Error loading questions. Please try again later.</div>;
-
   if (quizCompleted) {
     return (
       <div className="quiz-completed">
@@ -93,6 +116,7 @@ export default function Quiz() {
           Your score: {score} out of {questions.length}
         </p>
         <button onClick={restartQuiz}>Restart Quiz</button>
+        <button onClick={() => navigate("/")}>Back to Home</button>
       </div>
     );
   }
@@ -100,14 +124,21 @@ export default function Quiz() {
   return (
     <div className="quiz">
       <h2>
-        Quiz: {category} - {difficulty}
+        Quiz: Category {category} - Difficulty {difficulty}
       </h2>
       <div className="question">
-        <p>{questions[currentQuestionIndex].question}</p>
+        <p
+          dangerouslySetInnerHTML={{
+            __html: questions[currentQuestionIndex].question,
+          }}
+        />
         <ul>
           {questions[currentQuestionIndex].answers.map((answer, index) => (
             <li key={index}>
-              <button onClick={() => handleAnswer(answer)}>{answer}</button>
+              <button
+                onClick={() => handleAnswer(answer)}
+                dangerouslySetInnerHTML={{ __html: answer }}
+              />
             </li>
           ))}
         </ul>
