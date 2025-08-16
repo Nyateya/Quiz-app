@@ -16,9 +16,9 @@ import { useNavigate } from 'react-router-dom';
         navigate(`/quiz?category=${category}&difficulty=${difficulty}`);
       };
       const categories = [
-        { value: 'general', label: 'General Knowledge' },
-        { value: 'science', label: 'Science' },
-        { value: 'history', label: 'History' },
+        { value: '9', label: 'General Knowledge' },
+        { value: '17', label: 'Science' },
+        { value: '23', label: 'History' },
       ];
       const difficulties = [
         { value: 'easy', label: 'Easy' },
@@ -67,7 +67,7 @@ import { useNavigate } from 'react-router-dom';
             onClick={handleStartQuiz}
             className="bg-blue-500 text-white px-4 py-2 rounded"
           >
-            Thumbs Up!
+            Start Quiz!
           </button>
         </div>
       );

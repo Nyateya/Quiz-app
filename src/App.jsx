@@ -3,6 +3,7 @@ import './App.css'
 import WelcomePage from './components/WelcomePage.jsx'
 import Navbar from './components/Navbar.jsx'
 import Quiz from './components/Quiz.jsx'
+import History from './components/History.jsx'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 
 
@@ -15,6 +16,7 @@ function App() {
           <Route path="/" element={<WelcomePage />} />
         
           <Route path="/quiz" element={<Quiz/>} />
+          <Route path="/history" element={<History />} />
         </Routes>
       </div>
     </Router>

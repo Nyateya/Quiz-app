@@ -13,7 +13,7 @@ export default function Navbar({ onStart }) {
           navigate("/quiz");
         }}
       >
-        Start Quiz
+        Play
       </button>
       <button onClick={() => navigate("/history")}>History</button>
       <button onClick={() => navigate("/settings")}>Settings</button>

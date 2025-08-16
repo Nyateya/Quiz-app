@@ -15,7 +15,9 @@ export default function Quiz() {
   const [score, setScore] = useState(0);
   const [loading, setLoading] = useState(true);
   const [quizCompleted, setQuizCompleted] = useState(false);
-  // ✅ Fallback sample questions
+  const [timeLeft, setTimeLeft] = useState(60);
+
+  // ✅ Sample fallback questions
   const sampleQuestions = [
     {
       question: "What is the capital of France?",
@@ -33,32 +35,25 @@ export default function Quiz() {
   const fetchQuestions = useCallback(() => {
     setLoading(true);
     const url = `https://opentdb.com/api.php?amount=10&category=${category}&difficulty=${difficulty}&type=multiple`;
-    console.log("Fetching:", url);
 
     fetch(url)
       .then((res) => {
         if (res.status === 429) {
-          throw new Error(
-            "Rate limit reached. Please wait a bit and try again."
-          );
+          throw new Error("Rate limit reached. Try again later.");
         }
         return res.json();
       })
       .then((data) => {
-        console.log("API response:", data);
-
         if (
           data.response_code !== 0 ||
           !Array.isArray(data.results) ||
           data.results.length === 0
         ) {
-          console.warn("No questions found, using sample fallback.");
-          setQuestions(sampleQuestions); // ✅ fallback to sample
+          setQuestions(sampleQuestions);
           setLoading(false);
           return;
         }
 
-        // Format API questions
         const formatted = data.results.map((q) => {
           const answers = [...q.incorrect_answers];
           const randomIndex = Math.floor(Math.random() * (answers.length + 1));
@@ -74,10 +69,8 @@ export default function Quiz() {
         setQuestions(formatted);
         setLoading(false);
       })
-      .catch((err) => {
-        console.error("Error fetching questions:", err.message);
-        console.warn("Using fallback sample questions instead.");
-        setQuestions(sampleQuestions); // ✅ fallback
+      .catch(() => {
+        setQuestions(sampleQuestions);
         setLoading(false);
       });
   }, [category, difficulty]);
@@ -85,6 +78,17 @@ export default function Quiz() {
   useEffect(() => {
     fetchQuestions();
   }, [fetchQuestions]);
+
+  // Timer
+  useEffect(() => {
+    if (!loading && !quizCompleted) {
+      if (timeLeft === 0) {
+        handleAnswer(null); // auto skip when time runs out
+      }
+      const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [timeLeft, loading, quizCompleted]);
 
   const handleAnswer = (answer) => {
     if (answer === questions[currentQuestionIndex].correctAnswer) {
@@ -94,6 +98,7 @@ export default function Quiz() {
     const nextIndex = currentQuestionIndex + 1;
     if (nextIndex < questions.length) {
       setCurrentQuestionIndex(nextIndex);
+      setTimeLeft(60);
     } else {
       setQuizCompleted(true);
     }
@@ -103,8 +108,27 @@ export default function Quiz() {
     setScore(0);
     setCurrentQuestionIndex(0);
     setQuizCompleted(false);
+    setTimeLeft(60);
     fetchQuestions();
   };
+
+  // ✅ Save to history when quiz ends
+  useEffect(() => {
+    if (quizCompleted) {
+      const history = JSON.parse(localStorage.getItem("quizHistory")) || [];
+      const newEntry = {
+        category,
+        difficulty,
+        score,
+        total: questions.length,
+        date: new Date().toLocaleString(),
+      };
+      localStorage.setItem(
+        "quizHistory",
+        JSON.stringify([...history, newEntry])
+      );
+    }
+  }, [quizCompleted]);
 
   // UI states
   if (loading) return <div>Loading questions...</div>;
@@ -148,6 +172,7 @@ export default function Quiz() {
         <p>
           Question {currentQuestionIndex + 1} of {questions.length}
         </p>
+        <p>⏳ Time Left: {timeLeft}s</p>
       </div>
     </div>
   );
