@@ -1,0 +1,36 @@
+/* Bottom Navbar */
+.navbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+ 
+  padding: 12px 0;
+  display: flex;
+  justify-content: center;
+  border-radius: 12px 12px 0 0;
+}
+
+/* Links container */
+.navbar-links {
+  list-style: none;
+  display: flex;
+  gap: 30px;
+  margin: 0;
+  padding: 0;
+}
+
+/* Buttons inside navbar */
+.navbar-links li button {
+  background: #BA518B ;
+  border: none;
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.navbar-links li button:hover {
+  color: #161616;
+}
