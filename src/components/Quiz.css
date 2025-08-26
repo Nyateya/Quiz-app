@@ -1,43 +1,33 @@
-body {
-  background-color: #f5f5f5; /* light gray background */
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-}
 
-.quiz {
-  max-width: 600px;
-  margin: 40px auto;
-  padding: 20px;
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-
-.quiz img {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  margin-bottom: 10px;
-}
 
 .quiz h2 {
   font-size: 22px;
   font-weight: bold;
   margin-bottom: 10px;
+  text-align: center;
+  margin: 20px 0;
+  color: #333;
 }
 
 .question {
-  margin-bottom: 20px;
+  margin-bottom: 50px;
+  
+
 }
 
 .question p {
-  font-size: 18px;
+  font-size: 20px;
+  margin-bottom: 5px;
+  font-weight: bold;
+  
+  
 }
 
 .question ul {
   list-style: none;
-  padding: 0;
+  padding: 0; 
+  
+ 
 }
 
 .question button {
@@ -45,47 +35,55 @@ body {
   width: 100%;
   text-align: left;
   padding: 12px;
-  margin: 5px 0;
+  margin: 20px 0;
   border: 1px solid #ccc;
-  border-radius: 6px;
-  background: #f9f9f9;
+  border-radius: 11px;
+  
   cursor: pointer;
   transition: background 0.2s;
 }
 
 .question button:hover {
-  background: #e6f0ff;
+  background: #333;
 }
 
 .score {
   margin-top: 15px;
+  margin-bottom: 100px;
   font-size: 16px;
+  font-weight: bold;
+  color: #333;
 }
 
 .quiz-completed {
   text-align: center;
+  margin-top: 50px;
+  color: #333;
+
+
 }
 
 .quiz-completed h2 {
   font-size: 26px;
   margin-bottom: 15px;
+  font-weight: bold;
+  color: #333;
 }
 
 .quiz-completed button {
-  margin: 5px;
-  padding: 10px 18px;
+  margin: 10px;
+  padding: 10px 10px;
   border: none;
   border-radius: 6px;
   cursor: pointer;
   font-size: 15px;
+  font-weight: bold;
+  
 }
-
-.quiz-completed button:first-of-type {
-  background: #007bff;
+.quiz-completed button:hover {
+  background: #333;
   color: white;
 }
 
-.quiz-completed button:last-of-type {
-  background: #555;
-  color: white;
-}
+
+

@@ -34,7 +34,7 @@ export default function WelcomePage() {
       {/* Header */}
       <div className="header">
         <h1>QUIZ APP</h1>
-        <h2>WELCOME 🎉</h2>
+        <h2>WELCOME </h2>
       </div>
 
       {/* Main content */}
@@ -77,7 +77,7 @@ export default function WelcomePage() {
         {error && <p className="error">{error}</p>}
 
         {/* Button */}
-        <button onClick={handleStartQuiz}>Start Quiz 🚀</button>
+        <button onClick={handleStartQuiz}>Start Quiz </button>
       </div>
 
       </div>
