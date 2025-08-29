@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 
+
 export default function Settings() {
   // Settings state
   const [sound, setSound] = useState(true);

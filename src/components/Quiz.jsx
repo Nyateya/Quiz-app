@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import "./quiz.css"; // 👈 import our CSS
+import "./quiz.css"; 
 
 export default function Quiz() {
   const location = useLocation();

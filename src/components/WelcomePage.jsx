@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./WelcomePage.css"; // import plain CSS
+import "./WelcomePage.css"
 
 export default function WelcomePage() {
   const navigate = useNavigate();
