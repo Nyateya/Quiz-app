@@ -1,25 +1,31 @@
-/* WelcomePage.css */
+
 
 .welcome-page {
   display: flex;
   flex-direction: column;
   align-items: center; /* centers horizontally */
   justify-content: center;
-  min-height: 100vh; /* full height of screen */
-
+  min-height: 70vh;
   font-family: Arial, sans-serif;
+  margin-bottom: 50px;
 }
 
+
 .header {
-  text-align: center; /* center text */
-  margin-bottom: 20px;
+  text-align: center;
+  margin-bottom: 30px;
+  
+
 }
 
 .header h1 {
   font-size: 2.5rem;
-  margin: 0;
+  margin-top: 0px;
+  font-weight: bold;
+  
   color: #333;
 }
+
 
 .header h2 {
   font-size: 1.5rem;
@@ -28,10 +34,9 @@
 }
 
 
-
 .form-group {
-  margin: 15px 0;
-  text-align: left; /* labels aligned left inside card */
+  margin: 1.5rem 0;
+  text-align: left;
 }
 
 .form-group label {
